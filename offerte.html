@@ -1,0 +1,510 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Offerte aanvragen</title>
+
+  <link rel="stylesheet" href="offerte.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+  <style>
+    .step { display: none; }
+    .step.active { display: block; }
+    .tile-clickable { cursor: pointer; }
+
+    .home-btn {
+      margin-top: 25px;
+      background: transparent;
+      border: none;
+      color: #94a3b8;
+      cursor: pointer;
+      font-size: 0.95rem;
+      display: block;
+      margin-left: auto;
+      margin-right: auto;
+    }
+    .home-btn:hover {
+      color: #22c55e;
+      text-decoration: underline;
+    }
+
+    .inline-next-btn {
+      margin-top: 20px;
+      padding: 14px;
+      width: 100%;
+      background: #22c55e;
+      border: none;
+      border-radius: 14px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+    .inline-next-btn:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+  </style>
+</head>
+<body>
+
+<!-- ===============================
+ STARTSCHERM
+================================ -->
+<div id="mainContent">
+  <section class="hero">
+    <h1>Uw partner in Duurzame Energie. Vandaag én morgen.</h1>
+    <p>Selecteer hieronder waarvoor u een offerte wenst</p>
+  </section>
+
+  <section class="tiles-grid">
+    <div class="tile" style="--bg:url('images/koeltechniek.jpeg')">
+      <div class="tile-overlay"></div>
+      <div class="tile-content"><i class="fa-solid fa-snowflake"></i><span>Koeltechniek</span></div>
+    </div>
+
+    <div class="tile tile-clickable" id="aircoTrigger" style="--bg:url('images/yunus.png')">
+      <div class="tile-overlay"></div>
+      <div class="tile-content"><i class="fa-solid fa-wind"></i><span>Airco</span></div>
+    </div>
+
+    <div class="tile tile-clickable" id="pvTrigger" style="--bg:url('images/zonnepanelen1.jpeg')">
+      <div class="tile-overlay"></div>
+      <div class="tile-content"><i class="fa-solid fa-solar-panel"></i><span>Zonnepanelen</span></div>
+    </div>
+
+    <div class="tile" style="--bg:url('images/ventilatie.jpeg')">
+      <div class="tile-overlay"></div>
+      <div class="tile-content"><i class="fa-solid fa-fan"></i><span>Ventilatie</span></div>
+    </div>
+
+    <div class="tile" style="--bg:url('images/warmtepomp.jpeg')">
+      <div class="tile-overlay"></div>
+      <div class="tile-content"><i class="fa-solid fa-fire-flame-simple"></i><span>Warmtepomp</span></div>
+    </div>
+
+    <div class="tile" style="--bg:url('images/batterij.jpeg')">
+      <div class="tile-overlay"></div>
+      <div class="tile-content"><i class="fa-solid fa-battery-full"></i><span>Thuisbatterij</span></div>
+    </div>
+  </section>
+</div>
+
+<!-- ===============================
+ AIRCO CONFIGURATOR
+================================ -->
+<div id="aircoConfigurator" class="hidden">
+<section class="configurator">
+
+<h2>Airco configurator</h2>
+<p id="stepIndicator" class="step-indicator"></p>
+
+<div class="progress-bar">
+  <div class="progress" id="progress"></div>
+</div>
+
+<!-- STAP 1 -->
+<div class="step active" data-step="choice">
+  <h3>Gaat het om een huishoudelijke of industriële installatie?</h3>
+  <div class="option-grid">
+    <button class="option" data-key="type" data-value="Huishoudelijk">Huishoudelijk</button>
+    <button class="option" data-key="type" data-value="Industrieel">Industrieel</button>
+  </div>
+</div>
+
+<!-- STAP 2 -->
+<div class="step" data-step="choice">
+  <h3>Hoeveel ruimtes wilt u conditioneren?</h3>
+  <div class="option-grid">
+    <button class="option" data-key="aantalRuimtes" data-value="1">1</button>
+    <button class="option" data-key="aantalRuimtes" data-value="2">2</button>
+    <button class="option" data-key="aantalRuimtes" data-value="3">3</button>
+    <button class="option" data-key="aantalRuimtes" data-value="4">4</button>
+    <button class="option" data-key="aantalRuimtes" data-value="5">5</button>
+    <button class="option" data-key="aantalRuimtes" data-value="6">Meer</button>
+  </div>
+</div>
+
+<!-- STAP 3 -->
+<div class="step" data-step="choice">
+  <h3>Wilt u koelen en/of verwarmen?</h3>
+  <div class="option-grid">
+    <button class="option" data-key="gebruik" data-value="Koelen">Koelen</button>
+    <button class="option" data-key="gebruik" data-value="Verwarmen">Verwarmen</button>
+    <button class="option" data-key="gebruik" data-value="Beide">Beide</button>
+  </div>
+</div>
+
+<!-- STAP 4 -->
+<div class="step" data-step="input">
+  <h3>Geef per ruimte de details op</h3>
+  <div id="ruimtesContainer" class="ruimte-grid"></div>
+  <button class="inline-next-btn" id="ruimteVerderBtn" disabled>Verder</button>
+</div>
+
+<!-- STAP 5 -->
+<div class="step" data-step="choice">
+  <h3>Hoe is de isolatie van de woning?</h3>
+  <div class="option-grid">
+    <button class="option" data-key="isolatie" data-value="Matig">Matig</button>
+    <button class="option" data-key="isolatie" data-value="Redelijk">Redelijk</button>
+    <button class="option" data-key="isolatie" data-value="Goed">Goed</button>
+  </div>
+</div>
+
+<!-- STAP 6 -->
+<div class="step" data-step="choice">
+  <h3>Heeft u een merkvoorkeur?</h3>
+  <div class="option-grid brand-grid">
+    <button class="option brand-option" data-key="merk" data-value="MHI" style="--bg:url('images/mhi.png')">
+      <span>MHI</span>
+    </button>
+    <button class="option brand-option" data-key="merk" data-value="Daikin" style="--bg:url('images/daikin.png')">
+      <span>Daikin</span>
+    </button>
+    <button class="option brand-option" data-key="merk" data-value="LG" style="--bg:url('images/lg.png')">
+      <span>LG</span>
+    </button>
+     <button class="option brand-option" data-key="merk" data-value="Tosot" style="--bg:url('images/Tosot.png')">
+      <span>Tosot</span>
+    </button>
+  </div>
+</div>
+
+<!-- STAP 7 -->
+<!-- STAP 7 -->
+<div class="step" data-step="input">
+  <div class="summary-layout">
+
+    <!-- LINKS: SAMENVATTING -->
+    <div class="summary-left" id="summary"></div>
+
+    <!-- RECHTS: FORMULIER -->
+    <div class="summary-right">
+      <p class="trust-text">
+        Ontvang direct een <strong>indicatieve richtprijs</strong>.  
+      </p>
+
+      <form id="contactForm">
+        <input type="text" placeholder="Volledige naam" required>
+        <input type="text" placeholder="Postcode + huisnummer">
+        <input type="email" placeholder="E-mail" required>
+        <input type="tel" placeholder="Telefoon (optioneel)">
+
+        <button type="submit" class="price-btn">
+          Bereken uw prijs
+        </button>
+      </form>
+    </div>
+
+  </div>
+</div>
+
+
+  <div id="finalResult" class="hidden final-screen">
+    <h2>Indicatieve prijs</h2>
+    <p id="finalPrice"></p>
+    <p>
+      Ons salesteam neemt zo snel mogelijk contact met u op
+      om een eventueel plaatsbezoek of bezichtiging te bespreken.
+    </p>
+  </div>
+
+  <div class="navigation">
+    <button id="backBtn">Terug</button>
+    <button id="nextBtn">Verder</button>
+  </div>
+
+<button class="home-btn" id="homeBtn">← Terug naar startpagina</button>
+</section>
+</div>
+
+<div id="zonnepanelenConfigurator" class="hidden">
+<section class="configurator">
+
+<h2>Zonnepanelen configurator</h2>
+<p id="pvStepIndicator" class="step-indicator"></p>
+
+<div class="progress-bar">
+  <div class="progress" id="pvProgress"></div>
+</div>
+
+<div class="config-layout">
+
+<!-- LINKS: AFBEELDING -->
+<div class="config-image" id="pvImage"
+     style="background-image:url('images/pv-default.jpg')"></div>
+
+<!-- RECHTS: STAPPEN -->
+<div class="config-steps">
+
+<!-- STAP 1 -->
+<div class="pv-step active" data-step="dak">
+  <h3>Wat voor dak heeft u?</h3>
+  <div class="option-grid">
+    <button class="pv-option" data-key="dak" data-value="Plat">Plat dak</button>
+    <button class="pv-option" data-key="dak" data-value="Schuin">Schuin dak</button>
+  </div>
+</div>
+
+<!-- STAP 2A: PLAT -->
+<div class="pv-step" data-step="opstelling">
+  <h3>Welke opstelling?</h3>
+  <div class="option-grid">
+    <button class="pv-option" data-key="opstelling" data-value="Oost/West">Oost / West</button>
+    <button class="pv-option" data-key="opstelling" data-value="Zuid">Zuid</button>
+  </div>
+</div>
+
+<!-- STAP 2B: SCHUIN -->
+<div class="pv-step" data-step="daktype">
+  <h3>Wat voor dakbedekking?</h3>
+  <div class="option-grid">
+    <button class="pv-option" data-key="daktype" data-value="Pannendak">Pannendak</button>
+    <button class="pv-option" data-key="daktype" data-value="Leien">Leien</button>
+    <button class="pv-option" data-key="daktype" data-value="Golfplaten">Golfplaten</button>
+  </div>
+</div>
+
+<!-- STAP 3 -->
+<div class="pv-step" data-step="dakvlakken">
+  <h3>Hoeveel dakvlakken?</h3>
+  <div class="option-grid">
+    <button class="pv-option" data-key="dakvlakken" data-value="1">1</button>
+    <button class="pv-option" data-key="dakvlakken" data-value="2">2</button>
+    <button class="pv-option" data-key="dakvlakken" data-value="Meer">Meer</button>
+  </div>
+</div>
+
+<!-- STAP 4 -->
+<div class="pv-step" data-step="merk">
+  <h3>Kies uw zonnepanelen</h3>
+  <div class="option-grid brand-grid">
+    <button class="pv-option brand-option"
+      data-key="merk" data-value="AIKO"
+      style="--bg:url('images/aiko.png')">
+      <span>AIKO</span>
+    </button>
+    <button class="pv-option brand-option"
+      data-key="merk" data-value="JA Solar"
+      style="--bg:url('images/jasolar.png')">
+      <span>JA Solar</span>
+    </button>
+  </div>
+</div>
+
+</div>
+</div>
+
+<button class="home-btn" id="pvHomeBtn">← Terug naar startpagina</button>
+
+</section>
+</div>
+
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+
+  /* ======================================================
+     BASIS ELEMENTEN
+  ====================================================== */
+  const mainContent = document.getElementById("mainContent");
+  const body = document.body;
+
+  /* ======================================================
+     AIRCO CONFIGURATOR
+  ====================================================== */
+  const aircoTrigger = document.getElementById("aircoTrigger");
+  const aircoConfigurator = document.getElementById("aircoConfigurator");
+
+  const steps = aircoConfigurator.querySelectorAll(".step");
+  const progress = document.getElementById("progress");
+  const nextBtn = document.getElementById("nextBtn");
+  const backBtn = document.getElementById("backBtn");
+  const ruimtesContainer = document.getElementById("ruimtesContainer");
+  const ruimteVerderBtn = document.getElementById("ruimteVerderBtn");
+  const summary = document.getElementById("summary");
+  const stepIndicator = document.getElementById("stepIndicator");
+  const homeBtn = document.getElementById("homeBtn");
+
+  let currentStep = 0;
+
+  const aircoData = {
+    type: null,
+    aantalRuimtes: 1,
+    gebruik: null,
+    isolatie: null,
+    merk: null
+  };
+
+  function areAllSurfacesFilled() {
+    const inputs = ruimtesContainer.querySelectorAll("input");
+    return inputs.length > 0 && [...inputs].every(i => i.value > 0);
+  }
+
+  function updateAircoUI() {
+    steps.forEach((s, i) => s.classList.toggle("active", i === currentStep));
+    progress.style.width = ((currentStep + 1) / steps.length * 100) + "%";
+
+    stepIndicator.textContent =
+      currentStep === steps.length - 1
+        ? "Laatste stap 🎉"
+        : `Stap ${currentStep + 1} van ${steps.length}`;
+
+    const isInput = steps[currentStep].dataset.step === "input";
+    const isRuimteStap = steps[currentStep].contains(ruimtesContainer);
+
+    if (isRuimteStap) {
+      nextBtn.style.display = "none";
+      ruimteVerderBtn.style.display = "block";
+      ruimteVerderBtn.disabled = !areAllSurfacesFilled();
+    } else if (isInput) {
+      nextBtn.style.display = "block";
+      ruimteVerderBtn.style.display = "none";
+    } else {
+      nextBtn.style.display = "none";
+      ruimteVerderBtn.style.display = "none";
+    }
+
+    if (currentStep === steps.length - 1) {
+      renderAircoSummary();
+      nextBtn.style.display = "none";
+    }
+  }
+
+  aircoTrigger.onclick = () => {
+    body.classList.add("airco-active");
+    mainContent.style.display = "none";
+    aircoConfigurator.classList.remove("hidden");
+    currentStep = 0;
+    updateAircoUI();
+  };
+
+  homeBtn.onclick = () => {
+    body.classList.remove("airco-active");
+    aircoConfigurator.classList.add("hidden");
+    mainContent.style.display = "block";
+  };
+
+  backBtn.onclick = () => {
+    if (currentStep === 0) return homeBtn.click();
+    currentStep--;
+    updateAircoUI();
+  };
+
+  nextBtn.onclick = () => {
+    if (currentStep < steps.length - 1) {
+      currentStep++;
+      updateAircoUI();
+    }
+  };
+
+  ruimteVerderBtn.onclick = () => {
+    if (!ruimteVerderBtn.disabled && currentStep < steps.length - 1) {
+      currentStep++;
+      updateAircoUI();
+    }
+  };
+
+  aircoConfigurator.querySelectorAll(".option").forEach(btn => {
+    btn.onclick = () => {
+      aircoData[btn.dataset.key] = btn.dataset.value;
+
+      if (btn.dataset.key === "aantalRuimtes") {
+        ruimtesContainer.innerHTML = "";
+        for (let i = 0; i < btn.dataset.value; i++) {
+          ruimtesContainer.innerHTML += `
+            <div class="ruimte-card">
+              <select>
+                <option>Woonkamer</option>
+                <option>Slaapkamer</option>
+                <option>Zolder</option>
+                <option>Veranda</option>
+              </select>
+              <input type="number" min="1" placeholder="Oppervlakte (m²)">
+            </div>`;
+        }
+        ruimtesContainer.querySelectorAll("input")
+          .forEach(i => i.addEventListener("input", updateAircoUI));
+      }
+
+      currentStep++;
+      updateAircoUI();
+    };
+  });
+
+  function renderAircoSummary() {
+    summary.innerHTML = `
+      <h3>Uw configuratie</h3>
+      <ul class="summary-list">
+        <li><strong>Type:</strong> ${aircoData.type}</li>
+        <li><strong>Aantal ruimtes:</strong> ${aircoData.aantalRuimtes}</li>
+        <li><strong>Gebruik:</strong> ${aircoData.gebruik}</li>
+        <li><strong>Isolatie:</strong> ${aircoData.isolatie}</li>
+        <li><strong>Merk:</strong> ${aircoData.merk}</li>
+      </ul>`;
+  }
+
+  /* ======================================================
+     ZONNEPANELEN CONFIGURATOR
+  ====================================================== */
+  const pvTrigger = document.getElementById("pvTrigger");
+  const pvConfigurator = document.getElementById("zonnepanelenConfigurator");
+  const pvSteps = pvConfigurator.querySelectorAll(".pv-step");
+  const pvImage = document.getElementById("pvImage");
+  const pvHomeBtn = document.getElementById("pvHomeBtn");
+
+  let pvStep = 0;
+
+  const pvData = {
+    dak: null,
+    opstelling: null,
+    daktype: null,
+    dakvlakken: null,
+    merk: null
+  };
+
+  function showPvStep(index) {
+    pvSteps.forEach((s, i) => s.classList.toggle("active", i === index));
+  }
+
+  pvTrigger.onclick = () => {
+    body.classList.add("airco-active");
+    mainContent.style.display = "none";
+    aircoConfigurator.classList.add("hidden");
+    pvConfigurator.classList.remove("hidden");
+    pvStep = 0;
+    pvImage.style.backgroundImage = "url('images/pv-default.jpg')";
+    showPvStep(0);
+  };
+
+  pvHomeBtn.onclick = () => {
+    body.classList.remove("airco-active");
+    pvConfigurator.classList.add("hidden");
+    mainContent.style.display = "block";
+  };
+
+  pvConfigurator.querySelectorAll(".pv-option").forEach(btn => {
+    btn.onclick = () => {
+      pvData[btn.dataset.key] = btn.dataset.value;
+
+      if (pvData.dak === "Plat") {
+        pvImage.style.backgroundImage = "url('images/pv-plat.jpg')";
+      }
+      if (pvData.dak === "Schuin") {
+        pvImage.style.backgroundImage = "url('images/pv-schuin.jpg')";
+      }
+
+      if (pvStep === 0) {
+        pvStep = pvData.dak === "Plat" ? 1 : 2;
+      } else {
+        pvStep++;
+      }
+
+      showPvStep(pvStep);
+    };
+  });
+
+});
+</script>
+
+</body>
+</html>
